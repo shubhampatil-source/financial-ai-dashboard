@@ -1,0 +1,12 @@
+streamlit
+pandas
+numpy
+plotly
+pdfplumber
+sentence-transformers
+faiss-cpu
+prophet
+fpdf
+openpyxl
+groq
+scikit-learn
