@@ -109,24 +109,6 @@ Display:
 
 ---
 
-## Folder Structure
-
-```bash
-financial-ai-dashboard/
-│
-├── app.py
-├── requirements.txt
-├── utils/
-│   ├── ai_engine.py
-│   ├── unified_pipeline.py
-│   ├── parser.py
-│   ├── kpi_engine.py
-│   └── rag_engine.py
-│
-├── assets/
-├── sample_reports/
-└── README.md
-```
 
 ## Future Improvements
 
