@@ -9,3 +9,4 @@ def compare_companies(df1, df2):
     }
 
     return comparison
+

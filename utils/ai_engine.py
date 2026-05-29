@@ -100,25 +100,66 @@ def extract_financial_metrics(pdf_text):
     pdf_text = pdf_text[:4000]
 
     prompt = f"""
-    Extract the financial values from this report.
+    You are a financial analyst.
 
-    Return ONLY valid JSON.
+    Read the annual report text carefully.
 
-    NO explanations.
-    NO markdown.
-    NO ```json.
+    Extract ONLY financial statement values.
 
-    REQUIRED FORMAT:
+    IMPORTANT RULES:
 
-    {{
-        "Revenue": 0,
-        "Expenses": 0,
-        "Net_Profit": 0,
-        "Assets": 0,
-        "Liabilities": 0
-    }}
+    1. Prefer CONSOLIDATED statements
+    2. Prefer latest 2 years if available
+    3. Return exact numbers
+    4. No currency symbols
+    5. No commas
+    6. No explanations
+    7. No markdown
+    8. Missing values = 0
 
-    Financial Report:
+    Return ONLY valid JSON list.
+
+    FORMAT:
+
+    [
+        {{
+            "Year": 2023,
+            "Revenue": 0,
+            "Expenses": 0,
+            "Net_Profit": 0,
+            "Assets": 0,
+            "Liabilities": 0
+        }},
+        {{
+            "Year": 2022,
+            "Revenue": 0,
+            "Expenses": 0,
+            "Net_Profit": 0,
+            "Assets": 0,
+            "Liabilities": 0
+        }}
+    ]
+
+    MAPPING:
+
+    Revenue =
+    Revenue from operations /
+    Total income
+
+    Expenses =
+    Total expenses
+
+    Net_Profit =
+    Profit after tax /
+    Net profit
+
+    Assets =
+    Total assets
+
+    Liabilities =
+    Total liabilities
+
+    Annual Report Text:
     {pdf_text}
     """
 
@@ -181,7 +222,10 @@ def extract_financial_metrics(pdf_text):
     # EXTRACT JSON SAFELY
     # -----------------------------------
 
-    json_match = re.search(r"\{.*\}", result, re.DOTALL)
+    json_match = re.search(
+    r"\[.*\]|\{.*\}",
+    result,
+    re.DOTALL)
 
     if not json_match:
 
@@ -217,3 +261,4 @@ RAW RESPONSE:
 {result}
 """
         )
+        

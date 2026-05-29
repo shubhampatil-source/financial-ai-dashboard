@@ -1,19 +1,59 @@
 import pandas as pd
 
+
 def json_to_dataframe(financial_json):
 
-    # IF DICTIONARY
     if isinstance(financial_json, dict):
 
-        return pd.DataFrame([financial_json])
+        df = pd.DataFrame([financial_json])
 
-    # IF LIST
     elif isinstance(financial_json, list):
 
-        return pd.DataFrame(financial_json)
+        df = pd.DataFrame(financial_json)
 
     else:
 
         raise Exception(
-            f"Invalid financial_json type: {type(financial_json)}"
+            f"Invalid format: {type(financial_json)}"
         )
+
+    # ----------------------------
+    # CLEAN COLUMN NAMES
+    # ----------------------------
+
+    df.columns = [
+        str(col).strip().replace(" ", "_")
+        for col in df.columns
+    ]
+
+    # ----------------------------
+    # CLEAN NUMERIC VALUES
+    # ----------------------------
+
+    for col in df.columns:
+
+        if col != "Year":
+
+            df[col] = (
+                df[col]
+                .astype(str)
+                .str.replace(",", "")
+                .str.replace("₹", "")
+                .str.strip()
+            )
+
+            df[col] = pd.to_numeric(
+                df[col],
+                errors="coerce"
+            )
+
+    # YEAR CLEANUP
+
+    if "Year" in df.columns:
+
+        df["Year"] = pd.to_numeric(
+            df["Year"],
+            errors="coerce"
+        )
+
+    return df
